@@ -162,6 +162,8 @@ void graphics::destroy(const char *str, ...) {
             }
         }
     }
+    
+    va_end(ap);
 }
 
 // Creating a texture.
