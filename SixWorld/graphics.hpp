@@ -4,6 +4,7 @@
 #       include <SDL2/SDL_image.h>
 #       include <string>
 #       include "exception/exceptionSituated.hpp"
+#       include <SDL2/SDL_ttf.h>
 
 class graphics {
     
@@ -72,9 +73,14 @@ public:
                 throw std::string ("Error: ") += SDL_GetError();
             }
             
-            if (!IMG_Init(IMG_INIT_PNG) & IMG_INIT_PNG) {
+            if (!IMG_Init(IMG_INIT_PNG | IMG_INIT_JPG) & (IMG_INIT_PNG | IMG_INIT_JPG)) {
                 
-                throw std::string ("Error: ") += IMG_GetError();
+                throw exceptionSituated (IMG_GetError(), TYPEEXCEPTION_ERROR);
+            }
+            
+            if (TTF_Init() < 0) {
+                
+                throw exceptionSituated (TTF_GetError(), TYPEEXCEPTION_ERROR);
             }
             
             initialization_ = true;
@@ -88,6 +94,7 @@ public:
             
             IMG_Quit();
             SDL_Quit();
+            TTF_Quit();
             initialization_ = false;
         }
     }

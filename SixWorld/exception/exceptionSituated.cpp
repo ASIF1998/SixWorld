@@ -17,7 +17,7 @@ exceptionSituated::exceptionSituated(typeExcaption __except) noexcept:
 exceptionSituated::exceptionSituated(const char* msg__, typeExcaption __except) noexcept:
                                                               exceptionSituated(__except) {
     
-    msg_ = new char [(msg__ ? strlen(msg__) + 40 : 1)];
+    msg_ = new char [strlen(msg__) + 40];
     sprintf(msg_, (_excet == TYPEEXCEPTION_ERROR) ? "Error: %s" : "Warning: %s", msg__);
 }
 

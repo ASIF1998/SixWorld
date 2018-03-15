@@ -6,6 +6,8 @@
 #include <string>
 #include "diologWindow.hpp"
 #include "startWindow.hpp"
+#include "exception/exceptionSituated.hpp"
+#include "abstractRace.hpp"
 #include <ctime>
 
 int main(int argc, const char * argv[]) {
@@ -16,9 +18,15 @@ int main(int argc, const char * argv[]) {
         
         graphics::init();
         
-    } catch (const std::string error) {
+    } catch (const exceptionSituated& except) {
         
-        std::cerr << error << std::endl;
+        std::cerr << except.what() << std::endl;
+        
+        if (except.getTypeException() == TYPEEXCEPTION_ERROR) {
+            
+            graphics::quit();
+            exit(-1);
+        }
     }
     
     graphics space;

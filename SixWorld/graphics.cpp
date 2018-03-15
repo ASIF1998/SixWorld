@@ -135,11 +135,11 @@ void graphics::destroy(const char *str, ...) {
     
     Uint32 size = static_cast<Uint32>(strlen(str));
     
-    // Этот тип используется в качестве параметра для макросов, определенных в
-    // <Cstdarg> чтобы получить дополнительные аргументы функции.
+    // This type is used as a parameter for macros defined in
+    // <Cstdarg> to get additional arguments to the function.
     va_list ap;
     
-    // Инициализация указателя ap.
+    // Initialize the pointer ap.
     va_start(ap, &str);
     
     for (size_t i = 0; i < size; i++) {

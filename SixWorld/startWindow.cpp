@@ -12,9 +12,9 @@ void startWindow::win(graphics &space) {
     SDL_Rect exAnimationOption = {0, 500, 100, 100}, inAnimationOption = {0, 0, 300, 300};
     
     SDL_Rect buttonOut_1 = {550, 50, 210, 110},
-    buttonOut_2 = {550, 180, 210, 110},
-    buttonIn_1 = {1578, 138, 570, 290},
-    buttonIn_2 = {1578, 510, 570, 290};
+             buttonOut_2 = {550, 180, 210, 110},
+             buttonIn_1 = {1578, 138, 570, 290},
+             buttonIn_2 = {1578, 510, 570, 290};
     
     // Variables with which can track time.
     int t1 = SDL_GetTicks(), t2;
@@ -25,14 +25,14 @@ void startWindow::win(graphics &space) {
     bool animationButton_1 = true, animationButton_2 = true;
     
     // A variable that handles events.
-    SDL_Event event;
+    SDL_Event* event = new SDL_Event;
     
     while (stay) {
         
         // The cycle in which events are processed.
-        while (SDL_PollEvent(&event)) {
+        while (SDL_PollEvent(event)) {
             
-            switch (event.type) {
+            switch (event->type) {
                     
                 // If the "cross" button was pressed, the program is terminated.
                 case SDL_QUIT: {
@@ -43,17 +43,11 @@ void startWindow::win(graphics &space) {
                     
                 case SDL_MOUSEBUTTONUP: {
                     
-                    if (event.button.button == SDL_BUTTON_LEFT) {
+                    if (event->button.button == SDL_BUTTON_LEFT) {
                         
-                        if (event.motion.x > 560 && event.motion.x < 760) {
+                        if (event->motion.x > 560 && event->motion.x < 760) {
                             
-                            if (event.motion.y > 50 && event.motion.y < 150) {
-                                
-                                std::cout << " Кнопка 1 " << std::endl;
-                                animationButton_1 = true;
-                            }
-                            
-                            if (event.motion.y > 180 && event.motion.y < 280) {
+                            if (event->motion.y > 50 && event->motion.y < 150) {
                                 
                                 Sint32 num = choiceOfRace(space);
                                 
@@ -78,6 +72,10 @@ void startWindow::win(graphics &space) {
                                     std::cout << "Лесной" << std::endl;
                                     
                                 }
+                                animationButton_1 = true;
+                            }
+                            
+                            if (event->motion.y > 180 && event->motion.y < 280) {
                                 
                                 animationButton_2 = true;
                             }
@@ -89,15 +87,15 @@ void startWindow::win(graphics &space) {
                     
                 case SDL_MOUSEBUTTONDOWN: {
                     
-                    if (event.button.button == SDL_BUTTON_LEFT) {
+                    if (event->button.button == SDL_BUTTON_LEFT) {
                         
-                        if (event.motion.x > 560 && event.motion.x < 760) {
+                        if (event->motion.x > 560 && event->motion.x < 760) {
                             
-                            if (event.motion.y > 50 && event.motion.y < 150) {
+                            if (event->motion.y > 50 && event->motion.y < 150) {
                                 
                                 animationButton_1 = false;
                                 
-                            } else if (event.motion.y > 180 && event.motion.y < 280) {
+                            } else if (event->motion.y > 180 && event->motion.y < 280) {
                                 
                                 animationButton_2 = false;
                             }
@@ -111,7 +109,7 @@ void startWindow::win(graphics &space) {
                 case SDL_KEYUP: {
                     
                     // If the "escape" button was pressed, the program terminates&
-                    if (event.key.keysym.scancode == SDL_SCANCODE_ESCAPE) {
+                    if (event->key.keysym.scancode == SDL_SCANCODE_ESCAPE) {
                         
                         stay = false;
                         
@@ -166,7 +164,11 @@ void startWindow::win(graphics &space) {
 Sint32 startWindow::choiceOfRace(graphics &space) {
     
     // Pointer to the background image
+#ifdef  __APPLE__
     SDL_Texture* imageWithNamesOfNationalities = IMG_LoadTexture(space.getRender(), "/Users/asifmamedov/Desktop/SixWorld/SixWorld/image/character choice/RGAW9zKlG08.jpg");
+#else
+    SDL_Texture* imageWithNamesOfNationalities = IMG_LoadTexture(space.getRender(), "image/character choice/RGAW9zKlG08.jpg");
+#endif
     
     SDL_Rect optionsDisplayingBackgroundImage = {0, 0, 800, 600};
     
@@ -188,10 +190,10 @@ Sint32 startWindow::choiceOfRace(graphics &space) {
     }
     
     // Required for event processing.
-    SDL_Event event;
+    SDL_Event* event = new SDL_Event;
     
     // Required to display the current image.
-    bool stay = true;
+    bool stay = true, exit = false;
     
     // A variable in which the return value of the
     // function is stored.
@@ -206,7 +208,7 @@ Sint32 startWindow::choiceOfRace(graphics &space) {
     // cinderRect - parameters of the displayed image textureCinder
     // leafRect - parameters of the displayed image textureLeaf
     // sandRect - parameters of the displayed image textureSand
-    SDL_Rect cinderRect = {0, 0, 1, 2}, leafRect = {0, 0, 5, 1}, sandRect = {0, 0, 2, 2};
+    SDL_Rect cinderRect = {0, 0, 1, 2}, leafRect = {0, 0, 5, 1}, sandRect = {0, 0, 1, 2};
     
     // We need in order to simulate the size of the buttons.
     graphics::imageParameters button_1 = {{280, 250, 560, 250}, {88, 88, 220, 120}},
@@ -263,13 +265,15 @@ Sint32 startWindow::choiceOfRace(graphics &space) {
     // Draw a dot in white for the image of snowflakes.
     space.colorRender(0xff, 0xff, 0xff, 0xff);
     
+    Uint8 r = 240, g = 240, b = 240;
+    
     while (stay) {
         
         /* --------------------------------------------------- */
         /*                Event handling.                      */
-        while (SDL_PollEvent(&event)) {
+        while (SDL_PollEvent(event)) {
 
-            switch (event.type) {
+            switch (event->type) {
 
                 case SDL_QUIT: {
 
@@ -280,15 +284,15 @@ Sint32 startWindow::choiceOfRace(graphics &space) {
 
                 case SDL_KEYUP: {
 
-                    if (event.key.keysym.scancode == SDL_SCANCODE_ESCAPE) {
+                    if (event->key.keysym.scancode == SDL_SCANCODE_ESCAPE) {
 
                         getNumFunction = -1;
                         stay = false;
 
-                    } else if (event.key.keysym.scancode == SDL_SCANCODE_BACKSPACE) {
+                    } else if (event->key.keysym.scancode == SDL_SCANCODE_BACKSPACE) {
                         
                         getNumFunction = 0;
-                        stay = false;
+                        exit = true;
                     }
                     
                     break;
@@ -315,6 +319,7 @@ Sint32 startWindow::choiceOfRace(graphics &space) {
                         
                         activeButton_4 = false;
                     }
+                    
                     break;
                 }
                     
@@ -323,22 +328,22 @@ Sint32 startWindow::choiceOfRace(graphics &space) {
                     if (!activeButton_1) {
                         
                         getNumFunction = 1;
-                        stay = false;
+                        exit = true;
                         
                     } else if (!activeButton_2) {
                         
                         getNumFunction = 2;
-                        stay = false;
+                        exit = true;
                         
                     } else if (!activeButton_3) {
                         
                         getNumFunction = 3;
-                        stay = false;
+                        exit = true;
                         
                     } else if (!activeButton_4) {
                         
                         getNumFunction = 4;
-                        stay = false;
+                        exit = true;
                     }
                     
                     break;
@@ -346,8 +351,8 @@ Sint32 startWindow::choiceOfRace(graphics &space) {
                     
                 case SDL_MOUSEMOTION: {
                     
-                    pos_x = event.motion.x;
-                    pos_y = event.motion.y;
+                    pos_x = event->motion.x;
+                    pos_y = event->motion.y;
                     break;
                 }
             }
@@ -444,6 +449,21 @@ Sint32 startWindow::choiceOfRace(graphics &space) {
             space.setPoint(snows[i].x, snows[i].y);
         }
         
+
+        if (exit) {
+            
+            r -= 2;
+            g -= 2;
+            b -= 2;
+            
+            SDL_SetTextureColorMod(imageWithNamesOfNationalities, r, g, b);
+            
+            if (!r && !g && !b) {
+                
+                stay = false;
+            }
+        }
+        
         space.present();
     }
     
@@ -451,6 +471,7 @@ Sint32 startWindow::choiceOfRace(graphics &space) {
     delete [] leafs;
     delete [] sands;
     delete [] snows;
+    delete event;
     
     space.destroy("%t %t %t %t", imageWithNamesOfNationalities, textureCinder, textureLeaf, textureSand);
     return getNumFunction;
@@ -477,10 +498,9 @@ void startWindow::loadTexture(graphics& space, SDL_Texture *&textureCinder, SDL_
     }
     
     // Make white color transparent.
-    Uint32 colorkey = SDL_MapRGB(surfaceLeaf->format, 0xff, 0xff, 0xff);
-    SDL_SetColorKey(surfaceCinder, SDL_TRUE, colorkey);
-    SDL_SetColorKey(surfaceLeaf, SDL_TRUE, colorkey);
-    SDL_SetColorKey(surfaceSand, SDL_TRUE, colorkey);
+    SDL_SetColorKey(surfaceCinder, SDL_TRUE, SW_TRANSPARENTCOLOR_WHITE);
+    SDL_SetColorKey(surfaceLeaf, SDL_TRUE, SW_TRANSPARENTCOLOR_WHITE);
+    SDL_SetColorKey(surfaceSand, SDL_TRUE, SW_TRANSPARENTCOLOR_WHITE);
     
     // Create a texture.
     try {
